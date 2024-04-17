@@ -20,6 +20,7 @@ class CreateDB:
             model           TEXT,
             year            INTEGER,
             location        TEXT,
+            row             TEXT,
             yard_date       INTEGER,
             vin             INTEGER NOT NULL UNIQUE
 
