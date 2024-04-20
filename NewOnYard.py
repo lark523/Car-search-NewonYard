@@ -111,24 +111,25 @@ def idParts(csvfile, currentDB, location):
     with open(csvfile, newline = '') as filetoread:
         partslist = csv.reader(filetoread, delimiter = ',')
         for row in partslist:
+            if len(row)>0:
 
-            make_sel = row[0]
-            model_sel = row[1]
-            min_year = row[2].split('-')[0]
-            max_year = row[2].split('-')[1]
-            parts = row[3]
-            #print(make_sel.upper(), model_sel.upper(), min_year, max_year)
-            currentDB.cur.execute('''SELECT * FROM Cars WHERE make = ? and model like ? and year >= ? and year <= ? and location = ?''',
-                (make_sel.upper(),'%'+ model_sel.upper()+'%', min_year, max_year, location, ) )
-            results = currentDB.cur.fetchall()
-            #print(results)
+                make_sel = row[0]
+                model_sel = row[1]
+                min_year = row[2].split('-')[0]
+                max_year = row[2].split('-')[1]
+                parts = row[3]
+                #print(make_sel.upper(), model_sel.upper(), min_year, max_year)
+                currentDB.cur.execute('''SELECT * FROM Cars WHERE make = ? and model like ? and year >= ? and year <= ? and location = ?''',
+                    (make_sel.upper(),'%'+ model_sel.upper()+'%', min_year, max_year, location, ) )
+                results = currentDB.cur.fetchall()
+                #print(results)
 
-            if results == []:
-                print("No matches found for ",', '.join(row))
-                
-            else:
-                for element in results:
-                    print(element, parts)
+                if results == []:
+                    #print("No matches found for ",', '.join(row))
+                    continue
+                else:
+                    for element in results:
+                        print(element, parts)
         print("\n")
 
 
