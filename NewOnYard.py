@@ -72,7 +72,7 @@ def idParts(csvfile, currentDB, location):
     #cur = conn.cursor()
     outputcsv = input("Provide the name of the output file e.g. 'results.csv': \n")
     with open(outputcsv, 'w', newline = '') as outputfile:
-        outputwriter = csv.writer(outputfile, delimiter=',',doublequote = '')
+        outputwriter = csv.writer(outputfile, delimiter=',',quotechar = ' ', skipinitialspace = True)
         outputwriter.writerow(['ID','MAKE','MODEL','YEAR', 'LOCATION','ROW','YARDDATE','VIN','PARTS'])
         with open(csvfile, newline = '') as filetoread:
             partslist = csv.reader(filetoread, delimiter = ',')
@@ -95,9 +95,15 @@ def idParts(csvfile, currentDB, location):
                         continue
                     else:
                         for element in results:
-                            outputwriter.writerow([element,parts])
+                            for term in element:
+                                outputfile.write(str(term))
+                                outputfile.write(',')
+                            outputfile.write(parts)
+                            outputfile.write('\n')
                             print((element, parts))
             print("\n")
+    outputfile.close()
+    filetoread.close()
 
 
 def main():
@@ -121,12 +127,14 @@ def main():
             #inputFile = input("Enter the name of the csv file to be used \n")
             while True:
                 try:
-                    inputFile = input("Enter the name of the csv file to be used e.g. 'parts.csv' or any character to exit \n")
+                    inputFile = input("Enter the name of the csv file to be used e.g. 'parts.csv' or enter  'x' to exit \n")
                     if inputFile.endswith('.csv'):
                         open(inputFile, 'r')
                         break
                     else:
-                        return
+                        if inputFile == 'x':
+                            return
+                        else: print("Not a valid file, please try again")
                 except:
                     print(f'{inputFile}  could not be found. Please try again... \n ') 
             newDB.cur.execute('''SELECT DISTINCT Location from Cars''')
